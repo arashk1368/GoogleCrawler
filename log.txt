@@ -1,0 +1,78 @@
+May 28, 2014 10:08:44 PM cloudservices.brokerage.crawler.googlecrawler.App main
+SEVERE: Searching Start
+May 28, 2014 10:08:44 PM cloudservices.brokerage.crawler.googlecrawler.App main
+SEVERE: Google URL= http://www.google.com/
+May 28, 2014 10:08:44 PM cloudservices.brokerage.crawler.googlecrawler.App main
+SEVERE: Query= filetype:wsdl
+May 28, 2014 10:08:44 PM cloudservices.brokerage.crawler.googlecrawler.App main
+SEVERE: User Agent= ExampleBot 1.0 (+http://example.com/bot)
+May 28, 2014 10:08:44 PM cloudservices.brokerage.crawler.googlecrawler.App main
+SEVERE: Politeness Delay= 1,000
+May 28, 2014 10:08:44 PM cloudservices.brokerage.crawler.googlecrawler.App main
+SEVERE: Max Google Results= 20
+May 28, 2014 10:08:44 PM cloudservices.brokerage.crawler.googlecrawler.App main
+SEVERE: Initial Start= 10
+May 28, 2014 10:08:45 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder start
+INFO: WSDL Finder started for query= filetype:wsdl
+May 28, 2014 10:08:45 PM cloudservices.brokerage.crawler.googlecrawler.logic.GoogleSearch getResults
+INFO: Getting results in http://www.google.com/search?q=filetype%3Awsdl&start=10
+May 28, 2014 10:08:45 PM cloudservices.brokerage.crawler.googlecrawler.utils.DocumentLoader getDocument
+INFO: GET document with User Agent=ExampleBot 1.0 (+http://example.com/bot) from URL= http://www.google.com/search?q=filetype%3Awsdl&start=10
+May 28, 2014 10:08:46 PM cloudservices.brokerage.crawler.googlecrawler.logic.GoogleSearch getResults
+INFO: Found 10 results from parsing document
+May 28, 2014 10:08:46 PM cloudservices.brokerage.crawler.googlecrawler.logic.GoogleSearch getResults
+INFO: Found 10 results
+May 28, 2014 10:08:46 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder checkWSDL
+INFO: WSDL with url =http://www.eemvalley.nl/higrids/INforAMAService.wsdl already exists
+May 28, 2014 10:08:46 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder checkWSDL
+INFO: WSDL with url =http://www.visualwebservice.com/wsdl/uddi.org/uddi_api_v3_portType.wsdl already exists
+May 28, 2014 10:08:46 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder checkWSDL
+INFO: WSDL with url =http://www.verdek.com/verdekev/RateService_v3.wsdl already exists
+May 28, 2014 10:08:46 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder checkWSDL
+INFO: WSDL with url =http://www.tasatrails.com/Fedex/ShipService_v7.wsdl already exists
+May 28, 2014 10:08:46 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder checkWSDL
+INFO: WSDL with url =http://www.tasatrails.com/Fedex/RateService_v7.wsdl already exists
+May 28, 2014 10:08:46 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder checkWSDL
+INFO: WSDL with url =http://www.iicmva.com/IICMVA_CoverageVerification_Java_1.1.wsdl already exists
+May 28, 2014 10:08:46 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder checkWSDL
+INFO: WSDL with url =http://sonoma.etomic.org/user.wsdl already exists
+May 28, 2014 10:08:46 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder checkWSDL
+INFO: WSDL with url =http://www.darkuncle.net/sysadmin/NSConfig.wsdl already exists
+May 28, 2014 10:08:46 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder checkWSDL
+INFO: WSDL with url =http://www.wfsllc.com/echo/ShipService_v13.wsdl already exists
+May 28, 2014 10:08:46 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder checkWSDL
+INFO: WSDL with url =http://www.crownprod.com/fedex/RateService_v8.wsdl already exists
+May 28, 2014 10:08:47 PM cloudservices.brokerage.crawler.googlecrawler.logic.GoogleSearch getResults
+INFO: Getting results in http://www.google.com/search?q=filetype%3Awsdl&start=20
+May 28, 2014 10:08:47 PM cloudservices.brokerage.crawler.googlecrawler.utils.DocumentLoader getDocument
+INFO: GET document with User Agent=ExampleBot 1.0 (+http://example.com/bot) from URL= http://www.google.com/search?q=filetype%3Awsdl&start=20
+May 28, 2014 10:08:47 PM cloudservices.brokerage.crawler.googlecrawler.logic.GoogleSearch getResults
+INFO: Found 10 results from parsing document
+May 28, 2014 10:08:47 PM cloudservices.brokerage.crawler.googlecrawler.logic.GoogleSearch getResults
+INFO: Found 10 results
+May 28, 2014 10:08:47 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder start
+INFO: WSDL with url= https://www.lvinpost.de/ws/pawisda_enabled_hybrid_mail.wsdl added successfully with Id= 21
+May 28, 2014 10:08:47 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder start
+INFO: WSDL with url= http://www.paypalobjects.com/wsdl/PayPalSvc.wsdl added successfully with Id= 22
+May 28, 2014 10:08:47 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder start
+INFO: WSDL with url= http://ws.racai.ro/ttlws.wsdl added successfully with Id= 23
+May 28, 2014 10:08:48 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder start
+INFO: WSDL with url= http://www.aaiedu.hr/aosi/aosi.wsdl added successfully with Id= 24
+May 28, 2014 10:08:48 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder start
+INFO: WSDL with url= http://pubmlst.org/api/mlst.wsdl added successfully with Id= 25
+May 28, 2014 10:08:48 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder start
+INFO: WSDL with url= http://betstation.eu/soap/server.wsdl added successfully with Id= 26
+May 28, 2014 10:08:48 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder start
+INFO: WSDL with url= http://www.mediatoolbox.nl/ISDP.wsdl added successfully with Id= 27
+May 28, 2014 10:08:48 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder start
+INFO: WSDL with url= http://www.agroxml.de/content/content.wsdl added successfully with Id= 28
+May 28, 2014 10:08:48 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder start
+INFO: WSDL with url= http://www.drwillems.com/WillemsService.wsdl added successfully with Id= 29
+May 28, 2014 10:08:48 PM cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder start
+INFO: WSDL with url= http://clweb.cesr.fr/Methods_CLWEB.wsdl added successfully with Id= 30
+May 28, 2014 10:08:49 PM cloudservices.brokerage.crawler.googlecrawler.App main
+SEVERE: Searching End in 4,987ms
+May 28, 2014 10:08:49 PM cloudservices.brokerage.crawler.googlecrawler.App main
+SEVERE: Total Google Results Found: 20
+May 28, 2014 10:08:49 PM cloudservices.brokerage.crawler.googlecrawler.App main
+SEVERE: Total WSDL Saved: 10
