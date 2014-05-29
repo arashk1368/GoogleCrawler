@@ -9,18 +9,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.cfg.Configuration;
+import org.jsoup.HttpStatusException;
 
 public class App {
 
     private final static Logger LOGGER = Logger.getLogger(App.class.getName());
-    private final static String GOOGLE_URL = "http://www.google.com/";
-    private final static String USER_AGENT = "ExampleBot 1.0 (+http://example.com/bot)";
-    private final static long POLITENESS_DELAY = 1000; //ms
+    private final static String GOOGLE_URL = "https://www.google.com/";
+    private final static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) "
+            + "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36";
+//    private final static String USER_AGENT = "ExampleBot 1.0 (+http://example.com/bot)";
+    private final static long POLITENESS_DELAY = 60000; //ms
     private final static String QUERY = "filetype:wsdl";
-    private final static long MAX_GOOGLE_RESULTS = 20; //It is better %10=0
-    private final static long INITIAL_START = 10;
+    private final static long MAX_GOOGLE_RESULTS = Long.MAX_VALUE; //It is better %10=0
+    private final static long INITIAL_START = 0;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         try {
             LoggerSetup.setup("log.txt", "log.html", Level.INFO);
         } catch (IOException e) {
@@ -42,8 +45,12 @@ public class App {
             configuration.configure("hibernate.cfg.xml");
             BaseDAO.openSession(configuration);
 
-            finder.start(QUERY, MAX_GOOGLE_RESULTS,INITIAL_START);
-        } catch (HibernateException | IOException | DAOException ex) {
+            finder.start(QUERY, MAX_GOOGLE_RESULTS, INITIAL_START);
+        } catch (HttpStatusException ex) {
+            LOGGER.log(Level.SEVERE, "REJECTED BY GOOGLE", ex);
+            long rand = Math.round(Math.random() * 100);
+            Thread.sleep(POLITENESS_DELAY * rand);
+        } catch (HibernateException | DAOException | IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
         } finally {
             BaseDAO.closeSession();

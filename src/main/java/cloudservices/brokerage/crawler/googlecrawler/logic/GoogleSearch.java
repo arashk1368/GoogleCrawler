@@ -8,7 +8,6 @@ import cloudservices.brokerage.crawler.googlecrawler.model.GoogleResult;
 import cloudservices.brokerage.crawler.googlecrawler.utils.DocumentLoader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +63,7 @@ public class GoogleSearch {
                 String description = "";
                 String title = linkElement.text();
                 String url = linkElement.absUrl("href"); // Google returns URLs in format "http://www.google.com/url?q=<url>&sa=U&ei=<someKey>".
-                url = URLDecoder.decode(url.substring(url.indexOf('=') + 1, url.indexOf('&')), "UTF-8");
+//                url = URLDecoder.decode(url.substring(url.indexOf('=') + 1, url.indexOf('&')), "UTF-8");
 
                 if (!url.startsWith("http")) {
                     LOGGER.log(Level.INFO,

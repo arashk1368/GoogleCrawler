@@ -4,7 +4,6 @@
  */
 package cloudservices.brokerage.crawler.googlecrawler.logic;
 
-import cloudservices.brokerage.commons.utils.validators.WSDLValidator;
 import cloudservices.brokerage.crawler.crawlingcommons.model.DAO.DAOException;
 import cloudservices.brokerage.crawler.crawlingcommons.model.DAO.WSDLDAO;
 import cloudservices.brokerage.crawler.crawlingcommons.model.entities.WSDL;
@@ -21,11 +20,11 @@ import java.util.logging.Logger;
  */
 public class WSDLFinder {
 
-    private GoogleSearch googleSearch;
+    private final GoogleSearch googleSearch;
     private long politenessDelay;
     private long totalResultsNum;
     private long savedResultsNum;
-    private WSDLDAO wsdlDAO;
+    private final WSDLDAO wsdlDAO;
     private final static Logger LOGGER = Logger.getLogger(WSDLFinder.class.getName());
 
     public WSDLFinder(long politenessDelay, String userAgent, String googleUrl) {
@@ -39,11 +38,11 @@ public class WSDLFinder {
         List<GoogleResult> gResults;
         WSDL wsdl;
         long start = initialStart;
-        int counter = 0;
         while (this.totalResultsNum < maxGoogleResults) {
             gResults = this.googleSearch.getResults(query, start);
             this.totalResultsNum += gResults.size();
             start = initialStart + this.totalResultsNum;
+            int counter = 0;
             for (GoogleResult googleResult : gResults) {
                 wsdl = new WSDL(googleResult.getUrl(), googleResult.getTitle(), googleResult.getDescription());
                 if (checkWSDL(wsdl)) {
@@ -55,7 +54,8 @@ public class WSDLFinder {
             }
             LOGGER.log(Level.INFO, "Saved {0} WSDLs", counter);
             try {
-                Thread.sleep(this.politenessDelay);
+                long rand = Math.round(Math.random() * 10);
+                Thread.sleep(this.politenessDelay * rand);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
