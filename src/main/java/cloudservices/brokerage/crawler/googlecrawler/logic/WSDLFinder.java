@@ -39,6 +39,7 @@ public class WSDLFinder {
         List<GoogleResult> gResults;
         WSDL wsdl;
         long start = initialStart;
+        int counter = 0;
         while (this.totalResultsNum < maxGoogleResults) {
             gResults = this.googleSearch.getResults(query, start);
             this.totalResultsNum += gResults.size();
@@ -49,8 +50,10 @@ public class WSDLFinder {
                     wsdlDAO.addWSDL(wsdl);
                     LOGGER.log(Level.INFO, "WSDL with url= {0} added successfully with Id= {1}", new Object[]{wsdl.getUrl(), wsdl.getId()});
                     this.savedResultsNum++;
+                    counter++;
                 }
             }
+            LOGGER.log(Level.INFO, "Saved {0} WSDLs", counter);
             try {
                 Thread.sleep(this.politenessDelay);
             } catch (InterruptedException ex) {
