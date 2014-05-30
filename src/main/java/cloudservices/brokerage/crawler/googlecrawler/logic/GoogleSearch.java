@@ -33,12 +33,17 @@ public class GoogleSearch {
         this.googleUrl = googleUrl;
     }
 
-    public List<GoogleResult> getResults(String query, long start) throws UnsupportedEncodingException, IOException {
+    public List<GoogleResult> getResults(String query, long start, String fileType, String filter)
+            throws UnsupportedEncodingException, IOException {
         List<GoogleResult> googleResults = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         sb.append(googleUrl);
         sb.append("search?q=");
         sb.append(URLEncoder.encode(query, CHARSET));
+        sb.append("+filetype:");
+        sb.append(URLEncoder.encode(fileType, CHARSET));
+        sb.append("&filter=");
+        sb.append(URLEncoder.encode(filter, CHARSET));
         sb.append("&start=");
         sb.append(start);
 

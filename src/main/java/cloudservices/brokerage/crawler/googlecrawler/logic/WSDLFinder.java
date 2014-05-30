@@ -33,13 +33,14 @@ public class WSDLFinder {
         this.wsdlDAO = new WSDLDAO();
     }
 
-    public void start(String query, long maxGoogleResults, long initialStart) throws UnsupportedEncodingException, IOException, DAOException {
-        LOGGER.log(Level.INFO, "WSDL Finder started for query= {0}", query);
+    public void start(String query, String fileType, String filter, long maxGoogleResults, long initialStart) throws UnsupportedEncodingException, IOException, DAOException {
+        LOGGER.log(Level.INFO, "WSDL Finder started for query= {0} filetype= {1} filter= {2}",
+                new Object[]{query, fileType, filter});
         List<GoogleResult> gResults;
         WSDL wsdl;
         long start = initialStart;
         while (this.totalResultsNum < maxGoogleResults) {
-            gResults = this.googleSearch.getResults(query, start);
+            gResults = this.googleSearch.getResults(query, start, fileType, filter);
             this.totalResultsNum += gResults.size();
             start = initialStart + this.totalResultsNum;
             int counter = 0;
