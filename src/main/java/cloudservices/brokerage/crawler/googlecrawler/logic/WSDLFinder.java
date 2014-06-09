@@ -24,6 +24,7 @@ public class WSDLFinder {
     private long politenessDelay;
     private long totalResultsNum;
     private long savedResultsNum;
+    private long modifiedResultsNum;
     private final WSDLDAO wsdlDAO;
     private final static Logger LOGGER = Logger.getLogger(WSDLFinder.class.getName());
 
@@ -47,12 +48,12 @@ public class WSDLFinder {
             for (GoogleResult googleResult : gResults) {
                 wsdl = new WSDL(googleResult.getUrl(), googleResult.getTitle(), googleResult.getDescription());
                 if (checkWSDL(wsdl)) {
-                    addWSDL(wsdl);
-                    this.savedResultsNum++;
-                    counter++;
+                    if (addWSDL(wsdl)) {
+                        counter++;
+                    }
                 }
             }
-            LOGGER.log(Level.INFO, "Saved {0} WSDLs", counter);
+            LOGGER.log(Level.INFO, "{0} WSDLs Useful", counter);
             try {
                 long rand = Math.round(Math.random() * 10);
                 Thread.sleep(this.politenessDelay * rand);
@@ -62,17 +63,34 @@ public class WSDLFinder {
         }
     }
 
-    private void addWSDL(WSDL wsdl) throws DAOException {
+    private boolean addWSDL(WSDL wsdl) throws DAOException {
         WSDL indb = wsdlDAO.find(wsdl.getUrl());
         if (indb == null) {
             wsdlDAO.addWSDL(wsdl);
             LOGGER.log(Level.INFO, "WSDL with url= {0} added successfully with Id= {1}", new Object[]{wsdl.getUrl(), wsdl.getId()});
-        } else if (indb.getDescription().compareTo(wsdl.getDescription()) != 0) {
-            indb.setDescription(indb.getDescription().concat(";;;").concat(wsdl.getDescription()));
-            wsdlDAO.saveOrUpdate(indb);
-            LOGGER.log(Level.INFO, "Description for WSDL with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getDescription()});
+            this.savedResultsNum++;
+            return true;
         } else {
-            LOGGER.log(Level.INFO, "WSDL with url ={0} already exists", wsdl.getUrl());
+            boolean modified = false;
+            if (indb.getDescription().compareTo(wsdl.getDescription()) != 0) {
+                indb.setDescription(indb.getDescription().concat(";;;").concat(wsdl.getDescription()));
+                wsdlDAO.saveOrUpdate(indb);
+                LOGGER.log(Level.INFO, "Description for WSDL with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getDescription()});
+                modified = true;
+            }
+            if (indb.getTitle().compareTo(wsdl.getTitle()) != 0) {
+                indb.setTitle(indb.getTitle().concat(";;;").concat(wsdl.getTitle()));
+                wsdlDAO.saveOrUpdate(indb);
+                LOGGER.log(Level.INFO, "Title for WSDL with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getTitle()});
+                modified = true;
+            }
+            if (modified) {
+                this.modifiedResultsNum++;
+                return true;
+            } else {
+                LOGGER.log(Level.INFO, "WSDL with url ={0} already exists with the same description and title", wsdl.getUrl());
+                return false;
+            }
         }
     }
 
@@ -119,6 +137,10 @@ public class WSDLFinder {
      */
     public long getTotalResultsNum() {
         return totalResultsNum;
+    }
+
+    public long getModifiedResultsNum() {
+        return modifiedResultsNum;
     }
 
 }

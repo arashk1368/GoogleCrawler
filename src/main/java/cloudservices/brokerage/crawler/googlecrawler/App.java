@@ -64,6 +64,7 @@ public class App {
             LOGGER.log(Level.SEVERE, "Searching End in {0}ms", totalTime);
             LOGGER.log(Level.SEVERE, "Total Google Results Found: {0}", finder.getTotalResultsNum());
             LOGGER.log(Level.SEVERE, "Total WSDL Saved: {0}", finder.getSavedResultsNum());
+            LOGGER.log(Level.SEVERE, "Total WSDL Updated: {0}", finder.getModifiedResultsNum());
         }
     }
 }
