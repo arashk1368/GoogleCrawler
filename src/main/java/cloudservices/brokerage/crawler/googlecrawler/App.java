@@ -19,7 +19,7 @@ public class App {
             + "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36";
 //    private final static String USER_AGENT = "ExampleBot 1.0 (+http://example.com/bot)";
     private final static long POLITENESS_DELAY = 60000; //ms
-    private final static String QUERY = "";
+    private final static String QUERY = "SOAP Service";
     private final static String FILE_TYPE = "wsdl";
     private final static String GOOGLE_FILTER = "0";
     private final static long MAX_GOOGLE_RESULTS = 1000; //It is better %10=0

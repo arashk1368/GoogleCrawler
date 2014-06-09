@@ -47,8 +47,7 @@ public class WSDLFinder {
             for (GoogleResult googleResult : gResults) {
                 wsdl = new WSDL(googleResult.getUrl(), googleResult.getTitle(), googleResult.getDescription());
                 if (checkWSDL(wsdl)) {
-                    wsdlDAO.addWSDL(wsdl);
-                    LOGGER.log(Level.INFO, "WSDL with url= {0} added successfully with Id= {1}", new Object[]{wsdl.getUrl(), wsdl.getId()});
+                    addWSDL(wsdl);
                     this.savedResultsNum++;
                     counter++;
                 }
@@ -63,11 +62,25 @@ public class WSDLFinder {
         }
     }
 
-    private boolean checkWSDL(WSDL wsdl) throws DAOException {
-        if (wsdlDAO.URLExists(wsdl.getUrl())) {
+    private void addWSDL(WSDL wsdl) throws DAOException {
+        WSDL indb = wsdlDAO.find(wsdl.getUrl());
+        if (indb == null) {
+            wsdlDAO.addWSDL(wsdl);
+            LOGGER.log(Level.INFO, "WSDL with url= {0} added successfully with Id= {1}", new Object[]{wsdl.getUrl(), wsdl.getId()});
+        } else if (indb.getDescription().compareTo(wsdl.getDescription()) != 0) {
+            indb.setDescription(indb.getDescription().concat(";;;").concat(wsdl.getDescription()));
+            wsdlDAO.saveOrUpdate(indb);
+            LOGGER.log(Level.INFO, "Description for WSDL with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getDescription()});
+        } else {
             LOGGER.log(Level.INFO, "WSDL with url ={0} already exists", wsdl.getUrl());
-            return false;
         }
+    }
+
+    private boolean checkWSDL(WSDL wsdl) throws DAOException {
+//        if (wsdlDAO.URLExists(wsdl.getUrl())) {
+//            LOGGER.log(Level.INFO, "WSDL with url ={0} already exists", wsdl.getUrl());
+//            return false;
+//        }
         //TODO: validate wsdl and other logic here
         return true;
     }
@@ -107,4 +120,5 @@ public class WSDLFinder {
     public long getTotalResultsNum() {
         return totalResultsNum;
     }
+
 }
