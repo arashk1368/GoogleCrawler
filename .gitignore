@@ -1,4 +1,7 @@
 # Created by http://www.gitignore.io
+### Log Files ###
+old logs/
+logs/
 
 ### Windows ###
 # Windows image file caches

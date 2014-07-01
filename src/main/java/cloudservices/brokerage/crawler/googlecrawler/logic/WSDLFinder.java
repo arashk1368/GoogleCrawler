@@ -46,11 +46,15 @@ public class WSDLFinder {
             start = initialStart + this.totalResultsNum;
             int counter = 0;
             for (GoogleResult googleResult : gResults) {
-                wsdl = new WSDL(googleResult.getUrl(), googleResult.getTitle(), googleResult.getDescription());
-                if (checkWSDL(wsdl)) {
-                    if (addWSDL(wsdl)) {
-                        counter++;
+                try {
+                    wsdl = new WSDL(googleResult.getUrl(), googleResult.getTitle(), googleResult.getDescription());
+                    if (checkWSDL(wsdl)) {
+                        if (addWSDL(wsdl)) {
+                            counter++;
+                        }
                     }
+                } catch (Exception ex) {
+                       LOGGER.log(Level.SEVERE, ex.getMessage(), ex); 
                 }
             }
             LOGGER.log(Level.INFO, "{0} WSDLs Useful", counter);
