@@ -7,6 +7,7 @@ package cloudservices.brokerage.crawler.googlecrawler.logic;
 import cloudservices.brokerage.crawler.crawlingcommons.model.DAO.DAOException;
 import cloudservices.brokerage.crawler.crawlingcommons.model.DAO.WSDLDAO;
 import cloudservices.brokerage.crawler.crawlingcommons.model.entities.WSDL;
+import cloudservices.brokerage.crawler.crawlingcommons.model.enums.WSDLColType;
 import cloudservices.brokerage.crawler.googlecrawler.model.GoogleResult;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -26,6 +27,7 @@ public class WSDLFinder {
     private long savedResultsNum;
     private long modifiedResultsNum;
     private final WSDLDAO wsdlDAO;
+    private final static String TOKEN = ";;;";
     private final static Logger LOGGER = Logger.getLogger(WSDLFinder.class.getName());
 
     public WSDLFinder(long politenessDelay, String userAgent, String googleUrl) {
@@ -47,14 +49,14 @@ public class WSDLFinder {
             int counter = 0;
             for (GoogleResult googleResult : gResults) {
                 try {
-                    wsdl = new WSDL(googleResult.getUrl(), googleResult.getTitle(), googleResult.getDescription());
-                    if (checkWSDL(wsdl)) {
-                        if (addWSDL(wsdl)) {
+                    if (checkWSDL(googleResult)) {
+                        wsdl = new WSDL(googleResult.getUrl(), googleResult.getTitle(), googleResult.getDescription(), query);
+                        if (addOrUpdateWSDL(wsdl)) {
                             counter++;
                         }
                     }
                 } catch (Exception ex) {
-                       LOGGER.log(Level.SEVERE, ex.getMessage(), ex); 
+                    LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
                 }
             }
             LOGGER.log(Level.INFO, "{0} WSDLs Useful", counter);
@@ -67,7 +69,7 @@ public class WSDLFinder {
         }
     }
 
-    private boolean addWSDL(WSDL wsdl) throws DAOException {
+    private boolean addOrUpdateWSDL(WSDL wsdl) throws DAOException {
         WSDL indb = wsdlDAO.find(wsdl.getUrl());
         if (indb == null) {
             wsdlDAO.addWSDL(wsdl);
@@ -77,34 +79,64 @@ public class WSDLFinder {
         } else {
             boolean modified = false;
             if (indb.getDescription().compareTo(wsdl.getDescription()) != 0) {
-                indb.setDescription(indb.getDescription().concat(";;;").concat(wsdl.getDescription()));
-                wsdlDAO.saveOrUpdate(indb);
-                LOGGER.log(Level.INFO, "Description for WSDL with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getDescription()});
-                modified = true;
+                String newDesc = indb.getDescription().concat(TOKEN).concat(wsdl.getDescription());
+                if (WSDL.checkLength(newDesc.length(), WSDLColType.DESCRIPTION)) {
+                    indb.setDescription(newDesc);
+                    wsdlDAO.saveOrUpdate(indb);
+                    LOGGER.log(Level.INFO, "Description for WSDL with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getDescription()});
+                    modified = true;
+                } else {
+                    LOGGER.log(Level.INFO, "Description for WSDL with url = {0} can not be updated because it is too large!", indb.getUrl());
+                }
             }
             if (indb.getTitle().compareTo(wsdl.getTitle()) != 0) {
-                indb.setTitle(indb.getTitle().concat(";;;").concat(wsdl.getTitle()));
-                wsdlDAO.saveOrUpdate(indb);
-                LOGGER.log(Level.INFO, "Title for WSDL with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getTitle()});
-                modified = true;
+                String newTitle = indb.getTitle().concat(TOKEN).concat(wsdl.getTitle());
+                if (WSDL.checkLength(newTitle.length(), WSDLColType.TITLE)) {
+                    indb.setTitle(newTitle);
+                    wsdlDAO.saveOrUpdate(indb);
+                    LOGGER.log(Level.INFO, "Title for WSDL with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getTitle()});
+                    modified = true;
+                } else {
+                    LOGGER.log(Level.INFO, "Title for WSDL with url = {0} can not be updated because it is too large!", indb.getUrl());
+                }
+            }
+            if (indb.getQuery().compareTo(wsdl.getQuery()) != 0) {
+                String newQuery = indb.getQuery().concat(TOKEN).concat(wsdl.getQuery());
+                if (WSDL.checkLength(newQuery.length(), WSDLColType.SEARCHED_QUERY)) {
+                    indb.setQuery(newQuery);
+                    wsdlDAO.saveOrUpdate(indb);
+                    LOGGER.log(Level.INFO, "Query for WSDL with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getQuery()});
+                    modified = true;
+                } else {
+                    LOGGER.log(Level.INFO, "Query for WSDL with url = {0} can not be updated because it is too large!", indb.getUrl());
+                }
             }
             if (modified) {
                 this.modifiedResultsNum++;
                 return true;
             } else {
-                LOGGER.log(Level.INFO, "WSDL with url ={0} already exists with the same description and title", wsdl.getUrl());
+                LOGGER.log(Level.INFO, "WSDL with url ={0} already exists with the same properties or could not be updated", wsdl.getUrl());
                 return false;
             }
         }
     }
 
-    private boolean checkWSDL(WSDL wsdl) throws DAOException {
-//        if (wsdlDAO.URLExists(wsdl.getUrl())) {
-//            LOGGER.log(Level.INFO, "WSDL with url ={0} already exists", wsdl.getUrl());
-//            return false;
-//        }
-        //TODO: validate wsdl and other logic here
-        return true;
+    private boolean checkWSDL(GoogleResult googleResult) throws DAOException {
+        if (checkLength(googleResult)) {
+            return true;
+        } else {
+            //TODO: validate wsdl and other logic here
+            return false;
+        }
+    }
+
+    private boolean checkLength(GoogleResult googleResult) {
+        if (WSDL.checkLength(googleResult.getDescription().length(), WSDLColType.DESCRIPTION)
+                && WSDL.checkLength(googleResult.getTitle().length(), WSDLColType.TITLE)
+                && WSDL.checkLength(googleResult.getUrl().length(), WSDLColType.URL)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -146,5 +178,4 @@ public class WSDLFinder {
     public long getModifiedResultsNum() {
         return modifiedResultsNum;
     }
-
 }
