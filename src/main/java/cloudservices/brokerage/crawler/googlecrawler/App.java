@@ -104,7 +104,7 @@ public class App {
 
     private static List<String> createQueries() {
         List<String> queries = new ArrayList<>();
-        queries.add("usage");
+
         queries.add("Description Language");
         queries.add("Web Services Description Language");
         queries.add("contract");
@@ -160,6 +160,7 @@ public class App {
         queries.add("calculation service");
         queries.add("java");
         queries.add(".net");
+        queries.add("usage");
         queries.add("");
         return queries;
     }
