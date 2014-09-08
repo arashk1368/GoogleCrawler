@@ -29,6 +29,8 @@ public class WSDLFinder {
     private final WSDLDAO wsdlDAO;
     private final static String TOKEN = ";;;";
     private final static Logger LOGGER = Logger.getLogger(WSDLFinder.class.getName());
+    private final static int MAX_EMPTY_RESULTS = 3;
+    private int emptyCounter;
 
     public WSDLFinder(long politenessDelay, String userAgent, String googleUrl) {
         this.politenessDelay = politenessDelay;
@@ -42,24 +44,34 @@ public class WSDLFinder {
         List<GoogleResult> gResults;
         WSDL wsdl;
         long start = initialStart;
+        this.emptyCounter = 0;
         while (this.totalResultsNum < maxGoogleResults) {
             gResults = this.googleSearch.getResults(query, start, fileType, filter);
-            this.totalResultsNum += gResults.size();
-            start = initialStart + this.totalResultsNum;
-            int counter = 0;
-            for (GoogleResult googleResult : gResults) {
-                try {
-                    if (checkWSDL(googleResult)) {
-                        wsdl = new WSDL(googleResult.getUrl(), googleResult.getTitle(), googleResult.getDescription(), query);
-                        if (addOrUpdateWSDL(wsdl)) {
-                            counter++;
-                        }
-                    }
-                } catch (Exception ex) {
-                    LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
+            if (gResults.isEmpty()) {
+                if (emptyCounter > MAX_EMPTY_RESULTS) {
+                    LOGGER.log(Level.INFO, "No Results Found For {0} Times", MAX_EMPTY_RESULTS);
+                    break;
                 }
+                start = initialStart + 10 * emptyCounter;
+                emptyCounter++;
+            } else {
+                this.totalResultsNum += gResults.size();
+                start = initialStart + this.totalResultsNum;
+                int counter = 0;
+                for (GoogleResult googleResult : gResults) {
+                    try {
+                        if (checkWSDL(googleResult)) {
+                            wsdl = new WSDL(googleResult.getUrl(), googleResult.getTitle(), googleResult.getDescription(), query);
+                            if (addOrUpdateWSDL(wsdl)) {
+                                counter++;
+                            }
+                        }
+                    } catch (Exception ex) {
+                        LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
+                    }
+                }
+                LOGGER.log(Level.INFO, "{0} Results Useful", counter);
             }
-            LOGGER.log(Level.INFO, "{0} WSDLs Useful", counter);
             try {
                 long rand = Math.round(Math.random() * 10);
                 Thread.sleep(this.politenessDelay * rand);
@@ -73,7 +85,7 @@ public class WSDLFinder {
         WSDL indb = wsdlDAO.find(wsdl.getUrl());
         if (indb == null) {
             wsdlDAO.addWSDL(wsdl);
-            LOGGER.log(Level.INFO, "WSDL with url= {0} added successfully with Id= {1}", new Object[]{wsdl.getUrl(), wsdl.getId()});
+            LOGGER.log(Level.INFO, "Result with url= {0} added successfully with Id= {1}", new Object[]{wsdl.getUrl(), wsdl.getId()});
             this.savedResultsNum++;
             return true;
         } else {
@@ -83,10 +95,10 @@ public class WSDLFinder {
                 if (WSDL.checkLength(newDesc.length(), WSDLColType.DESCRIPTION)) {
                     indb.setDescription(newDesc);
                     wsdlDAO.saveOrUpdate(indb);
-                    LOGGER.log(Level.INFO, "Description for WSDL with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getDescription()});
+                    LOGGER.log(Level.INFO, "Description for Result with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getDescription()});
                     modified = true;
                 } else {
-                    LOGGER.log(Level.INFO, "Description for WSDL with url = {0} can not be updated because it is too large!", indb.getUrl());
+                    LOGGER.log(Level.INFO, "Description for Result with url = {0} can not be updated because it is too large!", indb.getUrl());
                 }
             }
             if (!indb.getTitle().contains(wsdl.getTitle())) {
@@ -94,10 +106,10 @@ public class WSDLFinder {
                 if (WSDL.checkLength(newTitle.length(), WSDLColType.TITLE)) {
                     indb.setTitle(newTitle);
                     wsdlDAO.saveOrUpdate(indb);
-                    LOGGER.log(Level.INFO, "Title for WSDL with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getTitle()});
+                    LOGGER.log(Level.INFO, "Title for Result with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getTitle()});
                     modified = true;
                 } else {
-                    LOGGER.log(Level.INFO, "Title for WSDL with url = {0} can not be updated because it is too large!", indb.getUrl());
+                    LOGGER.log(Level.INFO, "Title for Result with url = {0} can not be updated because it is too large!", indb.getUrl());
                 }
             }
             if (!indb.getQuery().contains(wsdl.getQuery())) {
@@ -105,17 +117,17 @@ public class WSDLFinder {
                 if (WSDL.checkLength(newQuery.length(), WSDLColType.SEARCHED_QUERY)) {
                     indb.setQuery(newQuery);
                     wsdlDAO.saveOrUpdate(indb);
-                    LOGGER.log(Level.INFO, "Query for WSDL with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getQuery()});
+                    LOGGER.log(Level.INFO, "Query for Result with url = {0} updated to {1}", new Object[]{indb.getUrl(), indb.getQuery()});
                     modified = true;
                 } else {
-                    LOGGER.log(Level.INFO, "Query for WSDL with url = {0} can not be updated because it is too large!", indb.getUrl());
+                    LOGGER.log(Level.INFO, "Query for Result with url = {0} can not be updated because it is too large!", indb.getUrl());
                 }
             }
             if (modified) {
                 this.modifiedResultsNum++;
                 return true;
             } else {
-                LOGGER.log(Level.INFO, "WSDL with url ={0} already exists with the same properties or could not be updated", wsdl.getUrl());
+                LOGGER.log(Level.INFO, "Result with url ={0} already exists with the same properties or could not be updated", wsdl.getUrl());
                 return false;
             }
         }
@@ -123,9 +135,12 @@ public class WSDLFinder {
 
     private boolean checkWSDL(GoogleResult googleResult) throws DAOException {
         if (checkLength(googleResult)) {
-            return true;
+            if (!googleResult.getUrl().contains("facebook")) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            //TODO: validate wsdl and other logic here
             return false;
         }
     }

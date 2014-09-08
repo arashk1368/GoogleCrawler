@@ -25,7 +25,7 @@ public class App {
     private final static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) "
             + "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36";
     private final static long POLITENESS_DELAY = 60000; //ms
-    private final static String FILE_TYPE = "wsdl";
+    private final static String FILE_TYPE = "wadl";
     private final static String GOOGLE_FILTER = "0";
     private final static long MAX_GOOGLE_RESULTS = 900; //It is better %10=0, max for google 1000
     private final static long INITIAL_START = 0;
@@ -70,8 +70,8 @@ public class App {
                     long totalTime = endTime - startTime;
                     LOGGER.log(Level.SEVERE, "Searching End in {0}ms", totalTime);
                     LOGGER.log(Level.SEVERE, "Google Results Found: {0}", finder.getTotalResultsNum());
-                    LOGGER.log(Level.SEVERE, "WSDLs Saved: {0}", finder.getSavedResultsNum());
-                    LOGGER.log(Level.SEVERE, "WSDLs Updated: {0}", finder.getModifiedResultsNum());
+                    LOGGER.log(Level.SEVERE, "Results Saved: {0}", finder.getSavedResultsNum());
+                    LOGGER.log(Level.SEVERE, "Results Updated: {0}", finder.getModifiedResultsNum());
 
                     totalFound += finder.getTotalResultsNum();
                     totalModified += finder.getModifiedResultsNum();
@@ -86,8 +86,8 @@ public class App {
                 long totalTime = endTime - totalStartTime;
                 LOGGER.log(Level.SEVERE, "Searching End for All in {0}ms", totalTime);
                 LOGGER.log(Level.SEVERE, "Total Google Results Found: {0}", totalFound);
-                LOGGER.log(Level.SEVERE, "Total WSDL Saved: {0}", totalSaved);
-                LOGGER.log(Level.SEVERE, "Total WSDL Updated: {0}", totalModified);
+                LOGGER.log(Level.SEVERE, "Total Results Saved: {0}", totalSaved);
+                LOGGER.log(Level.SEVERE, "Total Results Updated: {0}", totalModified);
             }
         } else {
             throw new RuntimeException("Problems with creating the log file");
@@ -108,6 +108,16 @@ public class App {
     private static List<String> createQueries() {
         List<String> queries = new ArrayList<>();
 
+//        queries.add("");
+//        queries.add("rest");
+//        queries.add("restful");
+//        queries.add("rest interface");
+//        queries.add("api");
+//        queries.add("rest api");
+//        queries.add("rest service");
+//        queries.add("rest developer api");
+//        queries.add("developer guide");
+//        queries.add("rest guide");
 //        queries.add("Description Language");
 //        queries.add("Web Services Description Language");
 //        queries.add("contract");
@@ -119,12 +129,18 @@ public class App {
 //        queries.add("service provider");
 //        queries.add("public");
 //        queries.add("SOAP");
-//        queries.add("soap based service");
 //        queries.add("interface");
 //        queries.add("service");
 //        queries.add("web service");
 //        queries.add("Web Services");
 //        queries.add("Services");
+//        queries.add("email");
+//        queries.add("stock");
+//        queries.add("tourism");
+//        queries.add("weather");
+//        queries.add("communication");
+//        queries.add("finance");
+        
 //        queries.add("Amazon");
 //        queries.add("Twitter");
 //        queries.add("apache");
@@ -147,30 +163,35 @@ public class App {
 //        queries.add("product service");
 //        queries.add("exchange service");
 //        queries.add("enterprise service");
-//        queries.add("status service");
-//        queries.add("converter service");
-//        queries.add("conversion service");
-//        queries.add("repair service");
-//        queries.add("price service");
-//        queries.add("stock service");
-//        queries.add("information service");
-//        queries.add("ecommerce");
-//        queries.add("customer service");
-//        queries.add("email service");
-//        queries.add("shop service");
-//        queries.add("access");
-//        queries.add("public access");
-//        queries.add("calculation service");
-//        queries.add("java");
-//        queries.add(".net");
-//        queries.add("usage");
-//        queries.add("");
-//        queries.add("email");
-//        queries.add("stock");
+        queries.add("status service");
+        queries.add("converter service");
+        queries.add("conversion service");
+        queries.add("repair service");
+        queries.add("price service");
+        queries.add("stock service");
+        queries.add("information service");
+        queries.add("ecommerce");
+        queries.add("customer service");
+        queries.add("email service");
+        queries.add("shop service");
+        queries.add("access");
+        queries.add("public access");
+        queries.add("calculation service");
+        queries.add("java");
+        queries.add(".net");
+        queries.add("usage");
+
+        queries.add("service contract");
+        queries.add("registry");
+        queries.add("service repository");
+        queries.add("service registry");
+        queries.add("service provider");
+        queries.add("public");
         queries.add("tourism");
         queries.add("weather");
         queries.add("communication");
-        queries.add("finance");
+        queries.add("linkedin");
+        queries.add("location service");
         return queries;
     }
 
