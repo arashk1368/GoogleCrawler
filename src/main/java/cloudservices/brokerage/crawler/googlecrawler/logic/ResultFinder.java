@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  *
  * @author Arash Khodadadi http://www.arashkhodadadi.com/
  */
-public class WSDLFinder {
+public class ResultFinder {
 
     private final GoogleSearch googleSearch;
     private long politenessDelay;
@@ -28,18 +28,18 @@ public class WSDLFinder {
     private long modifiedResultsNum;
     private final WSDLDAO wsdlDAO;
     private final static String TOKEN = ";;;";
-    private final static Logger LOGGER = Logger.getLogger(WSDLFinder.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(ResultFinder.class.getName());
     private final static int MAX_EMPTY_RESULTS = 3;
     private int emptyCounter;
 
-    public WSDLFinder(long politenessDelay, String userAgent, String googleUrl) {
+    public ResultFinder(long politenessDelay, String userAgent, String googleUrl) {
         this.politenessDelay = politenessDelay;
         this.googleSearch = new GoogleSearch(userAgent, googleUrl);
         this.wsdlDAO = new WSDLDAO();
     }
 
     public void start(String query, String fileType, String filter, long maxGoogleResults, long initialStart) throws UnsupportedEncodingException, IOException, DAOException {
-        LOGGER.log(Level.INFO, "WSDL Finder started for query= {0} filetype= {1} filter= {2}",
+        LOGGER.log(Level.INFO, "Result Finder started for query= {0} filetype= {1} filter= {2}",
                 new Object[]{query, fileType, filter});
         List<GoogleResult> gResults;
         WSDL wsdl;

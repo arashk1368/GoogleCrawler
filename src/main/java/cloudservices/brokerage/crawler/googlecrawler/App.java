@@ -3,7 +3,7 @@ package cloudservices.brokerage.crawler.googlecrawler;
 import cloudservices.brokerage.commons.utils.logging.LoggerSetup;
 import cloudservices.brokerage.crawler.crawlingcommons.model.DAO.BaseDAO;
 import cloudservices.brokerage.crawler.crawlingcommons.model.DAO.DAOException;
-import cloudservices.brokerage.crawler.googlecrawler.logic.WSDLFinder;
+import cloudservices.brokerage.crawler.googlecrawler.logic.ResultFinder;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -44,7 +44,7 @@ public class App {
                 BaseDAO.openSession(configuration);
 
                 for (String query : queries) {
-                    WSDLFinder finder = new WSDLFinder(POLITENESS_DELAY, USER_AGENT, GOOGLE_URL);
+                    ResultFinder finder = new ResultFinder(POLITENESS_DELAY, USER_AGENT, GOOGLE_URL);
                     long startTime = System.currentTimeMillis();
                     LOGGER.log(Level.SEVERE, "Searching Start");
                     LOGGER.log(Level.SEVERE, "Google URL= " + GOOGLE_URL);
@@ -107,91 +107,7 @@ public class App {
 
     private static List<String> createQueries() {
         List<String> queries = new ArrayList<>();
-
-//        queries.add("");
-//        queries.add("rest");
-//        queries.add("restful");
-//        queries.add("rest interface");
-//        queries.add("api");
-//        queries.add("rest api");
-//        queries.add("rest service");
-//        queries.add("rest developer api");
-//        queries.add("developer guide");
-//        queries.add("rest guide");
-//        queries.add("Description Language");
-//        queries.add("Web Services Description Language");
-//        queries.add("contract");
-//        queries.add("global");
-//        queries.add("service contract");
-//        queries.add("registry");
-//        queries.add("service repository");
-//        queries.add("service registry");
-//        queries.add("service provider");
-//        queries.add("public");
-//        queries.add("SOAP");
-//        queries.add("interface");
-//        queries.add("service");
-//        queries.add("web service");
-//        queries.add("Web Services");
-//        queries.add("Services");
-//        queries.add("email");
-//        queries.add("stock");
-//        queries.add("tourism");
-//        queries.add("weather");
-//        queries.add("communication");
-//        queries.add("finance");
-        
-//        queries.add("Amazon");
-//        queries.add("Twitter");
-//        queries.add("apache");
-//        queries.add("google");
-//        queries.add("sun");
-//        queries.add("youtube");
-//        queries.add("linkedin");
-//        queries.add("social media service");
-//        queries.add("facebook");
-//        queries.add("microsoft");
-//        queries.add("wikipedia");
-//        queries.add("connection service");
-//        queries.add("sms service");
-//        queries.add("gps service");
-//        queries.add("location service");
-//        queries.add("communication service");
-//        queries.add("education service");
-//        queries.add("weather service");
-//        queries.add("company service");
-//        queries.add("product service");
-//        queries.add("exchange service");
-//        queries.add("enterprise service");
-        queries.add("status service");
-        queries.add("converter service");
-        queries.add("conversion service");
-        queries.add("repair service");
-        queries.add("price service");
-        queries.add("stock service");
-        queries.add("information service");
-        queries.add("ecommerce");
-        queries.add("customer service");
-        queries.add("email service");
-        queries.add("shop service");
-        queries.add("access");
-        queries.add("public access");
-        queries.add("calculation service");
-        queries.add("java");
-        queries.add(".net");
-        queries.add("usage");
-
-        queries.add("service contract");
-        queries.add("registry");
-        queries.add("service repository");
-        queries.add("service registry");
-        queries.add("service provider");
-        queries.add("public");
-        queries.add("tourism");
-        queries.add("weather");
-        queries.add("communication");
-        queries.add("linkedin");
-        queries.add("location service");
+        queries.add("");
         return queries;
     }
 
