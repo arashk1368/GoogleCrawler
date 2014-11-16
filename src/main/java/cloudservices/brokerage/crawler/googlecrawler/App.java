@@ -1,5 +1,6 @@
 package cloudservices.brokerage.crawler.googlecrawler;
 
+import cloudservices.brokerage.commons.utils.file_utils.DirectoryUtil;
 import cloudservices.brokerage.commons.utils.logging.LoggerSetup;
 import cloudservices.brokerage.crawler.crawlingcommons.model.DAO.BaseDAO;
 import cloudservices.brokerage.crawler.crawlingcommons.model.DAO.DAOException;
@@ -62,7 +63,7 @@ public class App {
                     } catch (HttpStatusException | SocketTimeoutException | UnknownHostException ex) {
                         LOGGER.log(Level.SEVERE, "REJECTED BY GOOGLE OR INTERNET DISCONNECTED", ex);
                         long rand = Math.round(Math.random() * 100);
-                        LOGGER.log(Level.SEVERE, "Waiting for " + (POLITENESS_DELAY * rand));
+                        LOGGER.log(Level.SEVERE, "Waiting for {0}", (POLITENESS_DELAY * rand));
                         Thread.sleep(POLITENESS_DELAY * rand);
                     }
 
@@ -118,7 +119,8 @@ public class App {
             Calendar cal = Calendar.getInstance();
             sb.append(dateFormat.format(cal.getTime()));
             String filename = sb.toString();
-            LoggerSetup.setup("logs/" + filename + ".txt", "logs/" + filename + ".html", Level.INFO);
+            DirectoryUtil.createDir("logs");
+            LoggerSetup.setup("logs/" + filename + ".txt", "logs/" + filename + ".html", Level.FINER);
             return true;
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
