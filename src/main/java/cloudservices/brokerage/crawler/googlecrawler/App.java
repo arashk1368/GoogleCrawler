@@ -26,8 +26,8 @@ public class App {
     private final static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) "
             + "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36";
     private final static long POLITENESS_DELAY = 60000; //ms
-    private final static String FILE_TYPE = "wadl";
-    private final static String GOOGLE_FILTER = "0";
+    private final static String FILE_TYPE = "";
+    private final static String GOOGLE_FILTER = "";
     private final static long MAX_GOOGLE_RESULTS = 900; //It is better %10=0, max for google 1000
     private final static long INITIAL_START = 0;
 
@@ -63,7 +63,7 @@ public class App {
                     } catch (HttpStatusException | SocketTimeoutException | UnknownHostException ex) {
                         LOGGER.log(Level.SEVERE, "REJECTED BY GOOGLE OR INTERNET DISCONNECTED", ex);
                         long rand = Math.round(Math.random() * 100);
-                        LOGGER.log(Level.SEVERE, "Waiting for {0}", (POLITENESS_DELAY * rand));
+                        LOGGER.log(Level.SEVERE, "Waiting for " + (POLITENESS_DELAY * rand));
                         Thread.sleep(POLITENESS_DELAY * rand);
                     }
 

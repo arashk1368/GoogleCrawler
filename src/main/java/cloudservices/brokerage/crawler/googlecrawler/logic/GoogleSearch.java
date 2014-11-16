@@ -40,10 +40,15 @@ public class GoogleSearch {
         sb.append(googleUrl);
         sb.append("search?q=");
         sb.append(URLEncoder.encode(query, CHARSET));
-        sb.append("+filetype:");
-        sb.append(URLEncoder.encode(fileType, CHARSET));
-        sb.append("&filter=");
-        sb.append(URLEncoder.encode(filter, CHARSET));
+        if (!fileType.isEmpty()) {
+            sb.append("+filetype:");
+            sb.append(URLEncoder.encode(fileType, CHARSET));
+        }
+        if (!filter.isEmpty()) {
+            sb.append("&filter=");
+            sb.append(URLEncoder.encode(filter, CHARSET));
+        }
+
         sb.append("&start=");
         sb.append(start);
 
