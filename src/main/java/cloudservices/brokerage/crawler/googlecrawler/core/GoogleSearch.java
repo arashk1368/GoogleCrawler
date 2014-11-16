@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package cloudservices.brokerage.crawler.googlecrawler.logic;
+package cloudservices.brokerage.crawler.googlecrawler.core;
 
 import cloudservices.brokerage.crawler.googlecrawler.model.GoogleResult;
 import cloudservices.brokerage.crawler.googlecrawler.utils.DocumentLoader;
@@ -21,7 +21,7 @@ import org.jsoup.select.Elements;
  *
  * @author Arash Khodadadi http://www.arashkhodadadi.com/
  */
-public class GoogleSearch {
+class GoogleSearch {
 
     private String userAgent;
     private String googleUrl;

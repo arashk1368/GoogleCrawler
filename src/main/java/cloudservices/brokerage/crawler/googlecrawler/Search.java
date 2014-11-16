@@ -3,8 +3,6 @@ package cloudservices.brokerage.crawler.googlecrawler;
 import cloudservices.brokerage.commons.utils.file_utils.DirectoryUtil;
 import cloudservices.brokerage.commons.utils.logging.LoggerSetup;
 import cloudservices.brokerage.crawler.crawlingcommons.model.DAO.BaseDAO;
-import cloudservices.brokerage.crawler.crawlingcommons.model.DAO.DAOException;
-import cloudservices.brokerage.crawler.googlecrawler.logic.ResultFinder;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -19,9 +17,9 @@ import org.hibernate.HibernateException;
 import org.hibernate.cfg.Configuration;
 import org.jsoup.HttpStatusException;
 
-public class App {
+public class Search {
 
-    private final static Logger LOGGER = Logger.getLogger(App.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(Search.class.getName());
     private final static String GOOGLE_URL = "http://www.google.com/";
     private final static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) "
             + "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36";
@@ -45,7 +43,7 @@ public class App {
                 BaseDAO.openSession(configuration);
 
                 for (String query : queries) {
-                    ResultFinder finder = new ResultFinder(POLITENESS_DELAY, USER_AGENT, GOOGLE_URL);
+                    WSDLFinder finder = new WSDLFinder(POLITENESS_DELAY, USER_AGENT, GOOGLE_URL);
                     long startTime = System.currentTimeMillis();
                     LOGGER.log(Level.SEVERE, "Searching Start");
                     LOGGER.log(Level.SEVERE, "Google URL= " + GOOGLE_URL);
@@ -63,7 +61,7 @@ public class App {
                     } catch (HttpStatusException | SocketTimeoutException | UnknownHostException ex) {
                         LOGGER.log(Level.SEVERE, "REJECTED BY GOOGLE OR INTERNET DISCONNECTED", ex);
                         long rand = Math.round(Math.random() * 100);
-                        LOGGER.log(Level.SEVERE, "Waiting for " + (POLITENESS_DELAY * rand));
+                        LOGGER.log(Level.SEVERE, "Waiting for {0}", (POLITENESS_DELAY * rand));
                         Thread.sleep(POLITENESS_DELAY * rand);
                     }
 
@@ -79,7 +77,7 @@ public class App {
                     totalSaved += finder.getSavedResultsNum();
 
                 }
-            } catch (HibernateException | DAOException | IOException ex) {
+            } catch (HibernateException | IOException ex) {
                 LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
             } finally {
                 BaseDAO.closeSession();
