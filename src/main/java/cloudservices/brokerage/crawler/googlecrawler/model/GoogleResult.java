@@ -4,20 +4,48 @@
  */
 package cloudservices.brokerage.crawler.googlecrawler.model;
 
+import java.util.Objects;
+
 /**
  *
  * @author Arash Khodadadi http://www.arashkhodadadi.com/
  */
 public class GoogleResult {
-
+    
     private String title;
     private String url;
     private String description;
-
+    
     public GoogleResult(String title, String url, String description) {
         this.title = title;
         this.url = url;
         this.description = description;
+    }
+    
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof GoogleResult)) {
+            return false;
+        }
+        GoogleResult otherResult = (GoogleResult) other;
+        return otherResult.description.equals(this.description)
+                && otherResult.title.equals(this.title)
+                && otherResult.url.equals(this.url);
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 11 * hash + Objects.hashCode(this.title);
+        hash = 11 * hash + Objects.hashCode(this.url);
+        hash = 11 * hash + Objects.hashCode(this.description);
+        return hash;
     }
 
     /**

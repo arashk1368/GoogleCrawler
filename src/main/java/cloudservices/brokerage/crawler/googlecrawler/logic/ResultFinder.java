@@ -11,6 +11,7 @@ import cloudservices.brokerage.crawler.crawlingcommons.model.enums.WSDLColType;
 import cloudservices.brokerage.crawler.googlecrawler.model.GoogleResult;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,16 +22,19 @@ import java.util.logging.Logger;
  */
 public class ResultFinder {
 
+    private final static String TOKEN = ";;;";
+    private final static Logger LOGGER = Logger.getLogger(ResultFinder.class.getName());
+    private final static int MAX_EMPTY_RESULTS = 3;
+    private final static int MAX_SAME_RESULTS = 5;
     private final GoogleSearch googleSearch;
     private long politenessDelay;
     private long totalResultsNum;
     private long savedResultsNum;
     private long modifiedResultsNum;
-    private final WSDLDAO wsdlDAO;
-    private final static String TOKEN = ";;;";
-    private final static Logger LOGGER = Logger.getLogger(ResultFinder.class.getName());
-    private final static int MAX_EMPTY_RESULTS = 3;
     private int emptyCounter;
+    private int sameCounter;
+    private List<GoogleResult> previousResults;
+    private final WSDLDAO wsdlDAO;
 
     public ResultFinder(long politenessDelay, String userAgent, String googleUrl) {
         this.politenessDelay = politenessDelay;
@@ -45,6 +49,8 @@ public class ResultFinder {
         WSDL wsdl;
         long start = initialStart;
         this.emptyCounter = 0;
+        this.sameCounter = 0;
+        this.previousResults = new ArrayList<>(); // for the first time check
         while (this.totalResultsNum < maxGoogleResults) {
             gResults = this.googleSearch.getResults(query, start, fileType, filter);
             if (gResults.isEmpty()) {
@@ -54,6 +60,13 @@ public class ResultFinder {
                 }
                 start = initialStart + 10 * emptyCounter;
                 emptyCounter++;
+            } else if (previousResults.containsAll(gResults)) {
+                if (sameCounter > MAX_SAME_RESULTS) {
+                    LOGGER.log(Level.INFO, "Same Results Found For {0} Times", MAX_SAME_RESULTS);
+                    break;
+                }
+                start += gResults.size();
+                sameCounter++;
             } else {
                 this.totalResultsNum += gResults.size();
                 start = initialStart + this.totalResultsNum;
@@ -71,6 +84,9 @@ public class ResultFinder {
                     }
                 }
                 LOGGER.log(Level.INFO, "{0} Results Useful", counter);
+                this.previousResults = gResults;
+                this.emptyCounter = 0;
+                this.sameCounter = 0;
             }
             try {
                 long rand = Math.round(Math.random() * 10);
