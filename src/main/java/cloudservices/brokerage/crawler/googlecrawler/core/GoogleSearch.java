@@ -57,7 +57,7 @@ class GoogleSearch {
         Document doc = DocumentLoader.getDocument(sb.toString(), this.userAgent);
         Elements results = doc.select("li.g");
 
-        LOGGER.log(Level.INFO, "Found {0} results from parsing document", results.size());
+        LOGGER.log(Level.FINE, "Found {0} results from parsing document", results.size());
 
         GoogleResult gResult;
         Elements linkElements;
@@ -76,7 +76,7 @@ class GoogleSearch {
 //                url = URLDecoder.decode(url.substring(url.indexOf('=') + 1, url.indexOf('&')), "UTF-8");
 
                 if (!url.startsWith("http")) {
-                    LOGGER.log(Level.INFO,
+                    LOGGER.log(Level.FINE,
                             "The result with title= {0} and url= {1} is not a valid result", new Object[]{title, url});
                     continue; // Ads/news/etc.
                 }
@@ -84,7 +84,7 @@ class GoogleSearch {
                     descElement = descElements.get(0);
                     description = descElement.text();
                 } else {
-                    LOGGER.log(Level.INFO,
+                    LOGGER.log(Level.FINE,
                             "The result with title= {0} and url= {1} does not have a description", new Object[]{title, url});
                 }
 

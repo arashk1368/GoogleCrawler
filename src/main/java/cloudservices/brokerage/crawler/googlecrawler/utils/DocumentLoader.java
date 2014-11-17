@@ -19,7 +19,7 @@ public class DocumentLoader {
     private final static Logger LOGGER = Logger.getLogger(DocumentLoader.class.getName());
 
     public static Document getDocument(String url, String userAgent) throws IOException {
-        LOGGER.log(Level.INFO, "GET document with User Agent={0} from URL= {1}",
+        LOGGER.log(Level.FINE, "GET document with User Agent={0} from URL= {1}",
                 new Object[]{userAgent, url});
         return Jsoup.connect(url).userAgent(userAgent).get();
     }

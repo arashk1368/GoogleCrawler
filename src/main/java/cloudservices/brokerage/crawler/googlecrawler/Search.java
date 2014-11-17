@@ -3,6 +3,7 @@ package cloudservices.brokerage.crawler.googlecrawler;
 import cloudservices.brokerage.commons.utils.file_utils.DirectoryUtil;
 import cloudservices.brokerage.commons.utils.logging.LoggerSetup;
 import cloudservices.brokerage.crawler.crawlingcommons.model.DAO.BaseDAO;
+import cloudservices.brokerage.crawler.crawlingcommons.model.enums.v2.RawCrawledServiceType;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -28,9 +29,46 @@ public class Search {
     private final static String GOOGLE_FILTER = "";
     private final static long MAX_GOOGLE_RESULTS = 900; //It is better %10=0, max for google 1000
     private final static long INITIAL_START = 0;
+    private final static RawCrawledServiceType crawledServiceType = RawCrawledServiceType.DEVELOPERS_GUIDE;
 
     public static void main(String[] args) throws InterruptedException {
 //        createNewDB();
+        search();
+    }
+
+    private static void createNewDB() {
+        try {
+            Configuration configuration = new Configuration();
+            configuration.configure("hibernate.cfg.xml");
+            BaseDAO.openSession(configuration);
+        } finally {
+            BaseDAO.closeSession();
+        }
+    }
+
+    private static List<String> createQueries() {
+        List<String> queries = new ArrayList<>();
+        queries.add("");
+        return queries;
+    }
+
+    private static boolean createLogFile() {
+        try {
+            StringBuilder sb = new StringBuilder();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+            Calendar cal = Calendar.getInstance();
+            sb.append(dateFormat.format(cal.getTime()));
+            String filename = sb.toString();
+            DirectoryUtil.createDir("logs");
+            LoggerSetup.setup("logs/" + filename + ".txt", "logs/" + filename + ".html", Level.FINER);
+            return true;
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
+            return false;
+        }
+    }
+
+    private static void search() throws InterruptedException {
         List<String> queries = createQueries();
         if (createLogFile()) {
             long totalStartTime = System.currentTimeMillis();
@@ -43,18 +81,18 @@ public class Search {
                 BaseDAO.openSession(configuration);
 
                 for (String query : queries) {
-                    WSDLFinder finder = new WSDLFinder(POLITENESS_DELAY, USER_AGENT, GOOGLE_URL);
+                    ServiceFinder finder = new ServiceFinder(POLITENESS_DELAY, USER_AGENT, GOOGLE_URL, crawledServiceType);
                     long startTime = System.currentTimeMillis();
                     LOGGER.log(Level.SEVERE, "Searching Start");
                     LOGGER.log(Level.SEVERE, "Google URL= " + GOOGLE_URL);
                     LOGGER.log(Level.SEVERE, "Query= {0}", query);
                     LOGGER.log(Level.SEVERE, "File Type= " + FILE_TYPE);
                     LOGGER.log(Level.SEVERE, "Google Filtering= {0}", GOOGLE_FILTER);
-                    LOGGER.log(Level.SEVERE, "Query= {0}", query);
                     LOGGER.log(Level.SEVERE, "User Agent= " + USER_AGENT);
                     LOGGER.log(Level.SEVERE, "Politeness Delay= {0}", POLITENESS_DELAY);
                     LOGGER.log(Level.SEVERE, "Max Google Results= {0}", MAX_GOOGLE_RESULTS);
                     LOGGER.log(Level.SEVERE, "Initial Start= {0}", INITIAL_START);
+                    LOGGER.log(Level.SEVERE, "Crawled Service Type= {0}", crawledServiceType);
 
                     try {
                         finder.start(query, FILE_TYPE, GOOGLE_FILTER, MAX_GOOGLE_RESULTS, INITIAL_START);
@@ -90,39 +128,6 @@ public class Search {
             }
         } else {
             throw new RuntimeException("Problems with creating the log file");
-        }
-    }
-
-    private static void createNewDB() {
-        try {
-            Configuration configuration = new Configuration();
-            configuration.configure("hibernate.cfg.xml");
-            BaseDAO.openSession(configuration);
-
-        } finally {
-            BaseDAO.closeSession();
-        }
-    }
-
-    private static List<String> createQueries() {
-        List<String> queries = new ArrayList<>();
-        queries.add("");
-        return queries;
-    }
-
-    private static boolean createLogFile() {
-        try {
-            StringBuilder sb = new StringBuilder();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
-            Calendar cal = Calendar.getInstance();
-            sb.append(dateFormat.format(cal.getTime()));
-            String filename = sb.toString();
-            DirectoryUtil.createDir("logs");
-            LoggerSetup.setup("logs/" + filename + ".txt", "logs/" + filename + ".html", Level.FINER);
-            return true;
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
-            return false;
         }
     }
 }
